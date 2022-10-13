@@ -8,7 +8,8 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  static const String title = 'GoRouter Example: Declarative Routes';
+  static const String title = 'GoRouter Example';
+  static const textStyle = TextStyle(fontSize: 26.0);
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
@@ -49,7 +50,19 @@ class Page1Screen extends StatelessWidget {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () => context.go('/page2/桃'),
-                child: const Text('Go to page 2'),
+                child: const Text('桃', style: MyApp.textStyle),
+              ),
+              const SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () => context.go('/page2/ぶどう'),
+                child: const Text('ぶどう', style: MyApp.textStyle),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              ElevatedButton(
+                onPressed: () => context.go('/page2/バナナ'),
+                child: const Text('バナナ', style: MyApp.textStyle),
               ),
             ],
           ),
@@ -68,10 +81,19 @@ class Page2Screen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(fruit),
+              Text(
+                '$fruitを選びましたね',
+                style: MyApp.textStyle,
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
               ElevatedButton(
                 onPressed: () => context.go('/'),
-                child: const Text('Go back to home page'),
+                child: const Text(
+                  'Go back to home page',
+                  style: MyApp.textStyle,
+                ),
               ),
             ],
           ),
