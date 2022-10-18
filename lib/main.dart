@@ -124,6 +124,13 @@ class Page2Screen extends StatelessWidget {
               width: 300,
             ),
             const SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              fruits.elementAt(index)['author'],
+              style: const TextStyle(fontSize: 16.0),
+            ),
+            const SizedBox(
               height: 30.0,
             ),
           ],
