@@ -25,11 +25,11 @@ class MyApp extends StatelessWidget {
             const Page1Screen(),
         routes: <GoRoute>[
           GoRoute(
-              path: 'page2/:fruit',
+              path: 'page2/:id',
               builder: (BuildContext context, GoRouterState state) {
-                final fruit = state.params['fruit'];
+                final id = state.params['id'];
                 return Page2Screen(
-                  fruit: fruit!,
+                  id: id!,
                 );
               }),
         ],
@@ -48,21 +48,23 @@ class Page1Screen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              ElevatedButton(
-                onPressed: () => context.go('/page2/桃'),
-                child: const Text('桃', style: MyApp.textStyle),
-              ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () => context.go('/page2/ぶどう'),
-                child: const Text('ぶどう', style: MyApp.textStyle),
+              const Text(
+                'Page1',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 40.0,
               ),
               ElevatedButton(
-                onPressed: () => context.go('/page2/バナナ'),
-                child: const Text('バナナ', style: MyApp.textStyle),
+                onPressed: () => context.go('/page2/100'),
+                child: const Text('id:100 ぶどう', style: MyApp.textStyle),
+              ),
+              const SizedBox(
+                height: 40.0,
+              ),
+              ElevatedButton(
+                onPressed: () => context.go('/page2/200'),
+                child: const Text('id:200 バナナ', style: MyApp.textStyle),
               ),
             ],
           ),
@@ -71,32 +73,62 @@ class Page1Screen extends StatelessWidget {
 }
 
 class Page2Screen extends StatelessWidget {
-  final String fruit;
-  const Page2Screen({required this.fruit, Key? key}) : super(key: key);
+  final String id;
+  const Page2Screen({required this.id, Key? key}) : super(key: key);
+
+  static const List<Map> fruits = [
+    {
+      'id': '100',
+      'title': 'ぶどう',
+      'image_file': 'amos-bar-zeev-GibvqWh_OcE-unsplash.jpg',
+      'author': 'UnsplashのAmos Bar-Zeevが撮影した写真'
+    },
+    {
+      'id': '200',
+      'title': 'バナナ',
+      'image_file': 'anastasia-eremina-VI2rIoZUrks-unsplash.jpg',
+      'author': 'UnsplashのAnastasia Ereminaが撮影した写真'
+    },
+  ];
+
+  int getFruitIndex(String id) {
+    int index = 0;
+    for (var fruit in fruits) {
+      if (fruit['id'] == id) {
+        return index;
+      }
+      index++;
+    }
+    return index;
+  }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text(MyApp.title)),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '$fruitを選びましたね',
-                style: MyApp.textStyle,
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              ElevatedButton(
-                onPressed: () => context.go('/'),
-                child: const Text(
-                  'Go back to home page',
-                  style: MyApp.textStyle,
-                ),
-              ),
-            ],
-          ),
+  Widget build(BuildContext context) {
+    final index = getFruitIndex(id);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text(MyApp.title)),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'Page2',
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+            Image.asset(
+              fruits.elementAt(index)['image_file'],
+              width: 300,
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }
