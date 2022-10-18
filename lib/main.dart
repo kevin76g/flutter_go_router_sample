@@ -56,14 +56,14 @@ class Page1Screen extends StatelessWidget {
                 height: 40.0,
               ),
               ElevatedButton(
-                onPressed: () => context.go('/page2/100'),
+                onPressed: () => context.go('/page2/grape'),
                 child: const Text('id:100 ぶどう', style: MyApp.textStyle),
               ),
               const SizedBox(
                 height: 40.0,
               ),
               ElevatedButton(
-                onPressed: () => context.go('/page2/200'),
+                onPressed: () => context.go('/page2/banana'),
                 child: const Text('id:200 バナナ', style: MyApp.textStyle),
               ),
             ],
@@ -78,33 +78,27 @@ class Page2Screen extends StatelessWidget {
 
   static const List<Map> fruits = [
     {
-      'id': '100',
+      'id': 'grape',
       'title': 'ぶどう',
-      'image_file': 'amos-bar-zeev-GibvqWh_OcE-unsplash.jpg',
-      'author': 'UnsplashのAmos Bar-Zeevが撮影した写真'
     },
     {
-      'id': '200',
+      'id': 'banana',
       'title': 'バナナ',
-      'image_file': 'anastasia-eremina-VI2rIoZUrks-unsplash.jpg',
-      'author': 'UnsplashのAnastasia Ereminaが撮影した写真'
     },
   ];
 
-  int getFruitIndex(String id) {
-    int index = 0;
+  String getFruitTitle(String id) {
     for (var fruit in fruits) {
       if (fruit['id'] == id) {
-        return index;
+        return fruit['title'];
       }
-      index++;
     }
-    return index;
+    return 'none';
   }
 
   @override
   Widget build(BuildContext context) {
-    final index = getFruitIndex(id);
+    final title = getFruitTitle(id);
 
     return Scaffold(
       appBar: AppBar(title: const Text(MyApp.title)),
@@ -119,19 +113,10 @@ class Page2Screen extends StatelessWidget {
             const SizedBox(
               height: 40.0,
             ),
-            Image.asset(
-              fruits.elementAt(index)['image_file'],
-              width: 300,
-            ),
-            const SizedBox(
-              height: 10.0,
-            ),
             Text(
-              fruits.elementAt(index)['author'],
-              style: const TextStyle(fontSize: 16.0),
-            ),
-            const SizedBox(
-              height: 30.0,
+              '$titleです！',
+              style:
+                  const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
