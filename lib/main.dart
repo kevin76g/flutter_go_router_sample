@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+// import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() {
+  // usePathUrlStrategy();
   runApp(MyApp());
 }
+
+const List<Map> fruits = [
+  {'id': 'grape', 'title': 'ぶどう', 'price': '1500'},
+  {'id': 'banana', 'title': 'バナナ', 'price': '200'},
+];
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
@@ -28,8 +35,10 @@ class MyApp extends StatelessWidget {
               path: 'page2/:id',
               builder: (BuildContext context, GoRouterState state) {
                 final id = state.params['id'];
+                final num = state.extra as int;
                 return Page2Screen(
                   id: id!,
+                  num: num,
                 );
               }),
         ],
@@ -56,15 +65,15 @@ class Page1Screen extends StatelessWidget {
                 height: 40.0,
               ),
               ElevatedButton(
-                onPressed: () => context.go('/page2/grape'),
-                child: const Text('id:100 ぶどう', style: MyApp.textStyle),
+                onPressed: () => context.go('/page2/grape', extra: 1500),
+                child: const Text('ぶどうを1500円で購入', style: MyApp.textStyle),
               ),
               const SizedBox(
                 height: 40.0,
               ),
               ElevatedButton(
-                onPressed: () => context.go('/page2/banana'),
-                child: const Text('id:200 バナナ', style: MyApp.textStyle),
+                onPressed: () => context.go('/page2/banana', extra: 200),
+                child: const Text('バナナを 200円で購入 ', style: MyApp.textStyle),
               ),
             ],
           ),
@@ -74,18 +83,8 @@ class Page1Screen extends StatelessWidget {
 
 class Page2Screen extends StatelessWidget {
   final String id;
-  const Page2Screen({required this.id, Key? key}) : super(key: key);
-
-  static const List<Map> fruits = [
-    {
-      'id': 'grape',
-      'title': 'ぶどう',
-    },
-    {
-      'id': 'banana',
-      'title': 'バナナ',
-    },
-  ];
+  final int? num;
+  const Page2Screen({required this.id, this.num, Key? key}) : super(key: key);
 
   String getFruitTitle(String id) {
     for (var fruit in fruits) {
@@ -114,7 +113,7 @@ class Page2Screen extends StatelessWidget {
               height: 40.0,
             ),
             Text(
-              '$titleです！',
+              '$title は${num.toString()}円です！',
               style:
                   const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
             ),
