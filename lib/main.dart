@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_go_router_sample/scaffold_with_navbar.dart';
 import 'package:flutter_go_router_sample/screen_a.dart';
+import 'package:flutter_go_router_sample/screen_a_second.dart';
+import 'package:flutter_go_router_sample/screen_a_third.dart';
 import 'package:flutter_go_router_sample/screen_b.dart';
 import 'package:flutter_go_router_sample/screen_c.dart';
 import 'package:go_router/go_router.dart';
@@ -48,15 +50,28 @@ class MyApp extends StatelessWidget {
               // The details screen to display stacked on the inner Navigator.
               // This will cover screen A but not the application shell.
               GoRoute(
-                path: 'details/:id',
-                builder: (BuildContext context, GoRouterState state) {
-                  final id = state.params['id'];
-                  return DetailsScreen(
-                    label: 'A',
-                    id: id!,
-                  );
-                },
-              ),
+                  path: 'fruits/:fruit',
+                  builder: (BuildContext context, GoRouterState state) {
+                    final fruit = state.params['fruit'];
+                    return ScreenASecond(
+                      label: 'A',
+                      fruit: fruit!,
+                    );
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'categories/:category',
+                      builder: (BuildContext context, GoRouterState state) {
+                        final fruit = state.params['fruit'];
+                        final category = state.params['category'];
+                        return ScreenAThird(
+                          label: 'A',
+                          fruit: fruit!,
+                          category: category!,
+                        );
+                      },
+                    ),
+                  ]),
             ],
           ),
 

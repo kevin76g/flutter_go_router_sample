@@ -14,22 +14,25 @@ class ScreenA extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text('Screen A'),
+            Text(
+              'Screen A',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             TextButton(
               onPressed: () {
-                GoRouter.of(context).go('/a/details/Grape');
+                GoRouter.of(context).go('/a/fruits/Grape');
               },
               child: const Text('View Grape details'),
             ),
             TextButton(
               onPressed: () {
-                GoRouter.of(context).go('/a/details/Banana');
+                GoRouter.of(context).go('/a/fruits/Banana');
               },
               child: const Text('View Banana details'),
             ),
             TextButton(
               onPressed: () {
-                GoRouter.of(context).go('/a/details/Strawberry');
+                GoRouter.of(context).go('/a/fruits/Strawberry');
               },
               child: const Text('View Strawberry details'),
             ),
