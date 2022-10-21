@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_go_router_sample/scaffold_with_navbar.dart';
+import 'package:flutter_go_router_sample/screen_a.dart';
+import 'package:flutter_go_router_sample/screen_b.dart';
+import 'package:flutter_go_router_sample/screen_c.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:flutter_web_plugins/url_strategy.dart';
+import 'detail_screen.dart';
 
 void main() {
-  // usePathUrlStrategy();
   runApp(MyApp());
 }
 
-const List<Map> fruits = [
-  {'id': 'grape', 'title': 'ぶどう', 'price': '1500'},
-  {'id': 'banana', 'title': 'バナナ', 'price': '200'},
-];
+final GlobalKey<NavigatorState> _rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _shellNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shell');
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
@@ -25,101 +28,78 @@ class MyApp extends StatelessWidget {
       );
 
   final GoRouter _router = GoRouter(
-    routes: <GoRoute>[
-      GoRoute(
-        path: '/',
-        builder: (BuildContext context, GoRouterState state) =>
-            const Page1Screen(),
-        routes: <GoRoute>[
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: '/a',
+    routes: <RouteBase>[
+      /// Application shell
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (BuildContext context, GoRouterState state, Widget child) {
+          return ScaffoldWithNavBar(child: child);
+        },
+        routes: <RouteBase>[
+          /// The first screen to display in the bottom navigation bar.
           GoRoute(
-              path: 'page2/:id',
-              builder: (BuildContext context, GoRouterState state) {
-                final id = state.params['id'];
-                final num = state.extra as int;
-                return Page2Screen(
-                  id: id!,
-                  num: num,
-                );
-              }),
+            path: '/a',
+            builder: (BuildContext context, GoRouterState state) {
+              return const ScreenA();
+            },
+            routes: <RouteBase>[
+              // The details screen to display stacked on the inner Navigator.
+              // This will cover screen A but not the application shell.
+              GoRoute(
+                path: 'details/:id',
+                builder: (BuildContext context, GoRouterState state) {
+                  final id = state.params['id'];
+                  return DetailsScreen(
+                    label: 'A',
+                    id: id!,
+                  );
+                },
+              ),
+            ],
+          ),
+
+          /// Displayed when the second item in the the bottom navigation bar is
+          /// selected.
+          GoRoute(
+            path: '/b',
+            builder: (BuildContext context, GoRouterState state) {
+              return const ScreenB();
+            },
+            routes: <RouteBase>[
+              /// Same as "/a/details", but displayed on the root Navigator by
+              /// specifying [parentNavigatorKey]. This will cover both screen B
+              /// and the application shell.
+              GoRoute(
+                path: 'details',
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (BuildContext context, GoRouterState state) {
+                  return const DetailsScreen(label: 'B');
+                },
+              ),
+            ],
+          ),
+
+          /// The third screen to display in the bottom navigation bar.
+          GoRoute(
+            path: '/c',
+            builder: (BuildContext context, GoRouterState state) {
+              return const ScreenC();
+            },
+            routes: <RouteBase>[
+              // The details screen to display stacked on the inner Navigator.
+              // This will cover screen A but not the application shell.
+              GoRoute(
+                path: 'details',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const DetailsScreen(label: 'C');
+                },
+              ),
+            ],
+          ),
         ],
       ),
     ],
   );
-}
-
-class Page1Screen extends StatelessWidget {
-  const Page1Screen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text(MyApp.title)),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Page1',
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 40.0,
-              ),
-              ElevatedButton(
-                onPressed: () => context.go('/page2/grape', extra: 1500),
-                child: const Text('ぶどうを1500円で購入', style: MyApp.textStyle),
-              ),
-              const SizedBox(
-                height: 40.0,
-              ),
-              ElevatedButton(
-                onPressed: () => context.go('/page2/banana', extra: 200),
-                child: const Text('バナナを 200円で購入 ', style: MyApp.textStyle),
-              ),
-            ],
-          ),
-        ),
-      );
-}
-
-class Page2Screen extends StatelessWidget {
-  final String id;
-  final int? num;
-  const Page2Screen({required this.id, this.num, Key? key}) : super(key: key);
-
-  String getFruitTitle(String id) {
-    for (var fruit in fruits) {
-      if (fruit['id'] == id) {
-        return fruit['title'];
-      }
-    }
-    return 'none';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final title = getFruitTitle(id);
-
-    return Scaffold(
-      appBar: AppBar(title: const Text(MyApp.title)),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Page2',
-              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 40.0,
-            ),
-            Text(
-              '$title は${num.toString()}円です！',
-              style:
-                  const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
