@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// The fourth screen in the bottom navigation bar.
+/// The first screen in the bottom navigation bar.
 class ScreenA extends StatelessWidget {
-  /// Constructs a [ScreenD] widget.
+  /// Constructs a [ScreenA] widget.
   const ScreenA({Key? key}) : super(key: key);
 
   @override
